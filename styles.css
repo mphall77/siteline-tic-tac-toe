@@ -8,10 +8,12 @@
 	--greyBkgnd: rgb(37, 36, 36);
 	--bright: rgb(225, 245, 8);
 	--light: white;
+	--lightShadow: 2px 5px 3px 0px rgba(241, 237, 237, 0.5);
 }
 
 .container {
 	background-color: var(--greyBkgnd);
+
 	color: var(--light);
 	height: 100vh;
 	width: 100vw;
@@ -42,10 +44,73 @@
 	display: grid;
 	grid-template-columns: repeat(3, auto);
 	grid-template-rows: repeat(3, auto);
+	margin: 50px;
+	max-width: 300px;
+	align-items: center;
+	justify-content: center;
+	/* gap: 5px; */
+	/* background-color: rgb(235, 221, 221); */
 }
 
-.squares {
+.square {
 	height: 100px;
 	width: 100px;
 	color: var(--light);
+	background-color: var(--greyBkgnd);
+	border: 2px solid rgba(255, 255, 255, 0.7);
+	border-radius: 7px;
+	display: flex;
+}
+
+.square:hover {
+	background-color: rgba(172, 187, 201, 0.5);
+	transition: 0.3s ease-in-out;
+}
+
+/* remove edges  -- not sure about left and right edges */
+.square:first-child,
+.square:nth-child(2),
+.square:nth-child(3) {
+	border-top: none;
+}
+
+.square:nth-child(1),
+.square:nth-child(4),
+.square:nth-child(7) {
+	border-left: none;
+}
+
+.square:nth-child(3),
+.square:nth-child(6),
+.square:nth-child(9) {
+	border-right: none;
+}
+
+.square:last-child,
+.square:nth-child(7),
+.square:nth-child(8) {
+	border-bottom: none;
+}
+
+#restart-btn {
+	border-radius: 5px;
+	color: white;
+	background-color: rgb(31, 68, 124);
+	padding: 1.5rem;
+	margin: 2rem;
+	border: none;
+	width: 33%;
+	text-transform: uppercase;
+	font-size: 1rem;
+	text-align: center;
+	letter-spacing: 0.1em;
+	box-shadow: var(--lightShadow);
+	transition: 0.3s ease-in-out;
+	cursor: pointer;
+}
+
+#restart-btn:hover {
+	color: rgb(31, 68, 124);
+	background-color: white;
+	font-weight: 800;
 }
