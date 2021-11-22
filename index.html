@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Tic Tac Toe</title>
+		<link rel="stylesheet" href="styles.css" />
+		<script src="./app.js" defer></script>
+	</head>
+	<body>
+		<main class="container">
+			<section class="title">
+				<h1>Tic Tac Toe</h1>
+			</section>
+
+			<!-- Who's turn is it? -->
+			<section class="display">
+				<h3>Player: <span class="show-player"></span></h3>
+			</section>
+
+			<!-- create the board -->
+			<section class="board">
+				<!-- squares -->
+				<div class="square" id="0"></div>
+				<div class="square" id="1"></div>
+				<div class="square" id="2"></div>
+				<div class="square" id="3"></div>
+				<div class="square" id="4"></div>
+				<div class="square" id="5"></div>
+				<div class="square" id="6"></div>
+				<div class="square" id="7"></div>
+				<div class="square" id="8"></div>
+			</section>
+
+			<!-- control panel -->
+			<button id="restart-btn">new game</button>
+		</main>
+	</body>
+</html>
