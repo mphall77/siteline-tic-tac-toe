@@ -1,10 +1,10 @@
 # siteline-tic-tac-toe
 Play against a computer that always wins.
 
-###Technology
+### Technology
 HTML, CSS, Vanilla Javascript
 
-###Live Site
+### Live Site
 Deployed with Netlify
 
 
