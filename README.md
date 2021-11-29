@@ -4,7 +4,9 @@ Play against a computer that always wins.
 
 ### To Play
 
-clone the repo and launch the index.html file in the broweser.
+clone the repo from github: https://github.com/mphall77/siteline-tic-tac-toe
+(click the green Code button, download zip file or copy HTTPS, SSH etc. )
+and launch the index.html file in the browser .
 
 ### Technology
 
