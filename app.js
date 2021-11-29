@@ -1,12 +1,12 @@
-// SELECTORS
+//	-------*	S E L E C T O R S	*-------
 const squares = Array.from(document.querySelectorAll(".square"));
 const restartBtn = document.getElementById("restart-btn");
 const showPlayer = document.querySelector(".show-player");
 const winText = document.querySelector(".who-won");
 
-let computer = "X"; // = "X"
-let human; //= "O"
-let currPlayer = computer;
+let computer = "X";
+let human = "O";
+let board;
 
 // how do I know when a player wins?
 const winCombos = [
@@ -20,136 +20,154 @@ const winCombos = [
 	[2, 4, 6],
 ];
 
-// FUNCTIONS
-const handleClick = (e) => {
-	squareClicked = e.target;
-	currPlayer = computer ? "X" : "O";
-
-	// place the mark for the player
-	setMark(squareClicked, currPlayer);
-
-	// is game over?
-	didWin();
-
-	// computer choices
-	computerPlay();
-
-	// switch turns
-	toggleTurns();
-};
-
-const setMark = () => {
-	squareClicked.classList.add(currPlayer);
-	squareClicked.innerText = currPlayer;
-};
-
-const toggleTurns = () => {
-	computer = !computer;
-	showPlayer.innerText = currPlayer;
-};
-
-const didWin = () => {
-	for (let i = 0; i < winCombos.length; i++) {
-		let check = [];
-
-		// refactor with some and every == won't need to store in an array???
-		let look = winCombos[i].forEach((idx) => {
-			check.push(squares[idx].classList[1]);
-		});
-
-		// win or loose
-		if (
-			check.every((el) => {
-				return el === currPlayer;
-			})
-		) {
-			showPlayer.parentNode.classList.add("hide");
-			winText.innerText = `Player ${currPlayer} won! 🥳 `;
-			break;
-		}
-
-		// tie
-		if (
-			squares.every((el) => {
-				return el.classList.length >= 2;
-			})
-		) {
-			showPlayer.parentNode.classList.add("hide");
-			winText.innerText = `It's a draw! 🥸 `;
-		}
-	}
-};
-
-const minimax = (choicesArr, currPlayer) => {
-	// how do I know when computer wins?
-	// how do i switch between players?  -- do i need to?
-	// save all the outcomes ===> -10, 10, 0
-	// choose the best move for the computer to win
-	// loop through the choices ===> decision tree ===>
-	// return early if easiest path to win is found
-	// need index of the square and set the mark
-	for (let i = 0; i < choicesArr.length; i++) {
-		if (computer - is - player) {
-			// bestMove = ???;
-			// move = want to return maximizer
-			// Math.max(bestMove,move)
-		} else if (human - is - player) {
-			// bestMove = ???;
-			// move = want to return minimizer
-			// Math.min(bestMove,move )
-		} else if (choicesArr.length === 0) {
-			return 0;
-		}
-	}
-};
-
-// computer's selection
-const computerPlay = () => {
-	let choicesArr = [];
-	let move;
-	for (let i = 0; i < squares.length; i++) {
-		// console.log(squares[i].classList);
-		if (squares[i].classList.length == 1 || squares[i].classList.length == 1) {
-			choicesArr.push(squares[i].id); //index
-		}
-	}
-	// pick an available spot to mark
-	move = Math.floor(Math.random() * choicesArr.length);
-	console.log("move", move);
-
-	// ... how do I set the mark?
-	squares[move].classList.add(currPlayer);
-	squares[move].innerText = currPlayer; //not putting the correct mark
-
-	// choose the best move ===> recursion???
-	// move this function up (before we set the mark)
-	// minimax(choicesArr, currPlayer);
-};
-
+//	-------*	F U N C T I O N S	*-------
 // activate the board
 const startGame = () => {
-	squares.forEach((square) => {
-		square.addEventListener("click", handleClick, { once: true });
-	});
+	document.querySelector(".results").style.display = "none";
+	board = Array.from(Array(9).keys());
+	for (let i = 0; i < squares.length; i++) {
+		squares[i].innerText = "";
+		squares[i].style.removeProperty("background-color");
+		squares[i].addEventListener("click", handleClick, { once: true });
+	}
 };
 
-// reset board
-const resetBoard = () => {
-	showPlayer.innerText = "";
-	showPlayer.parentNode.classList.remove("hide");
-	winText.classList.add("hide");
-	squares.forEach((square) => {
-		square.innerText = "";
-		square.classList.remove("X");
-		square.classList.remove("O");
-	});
-	startGame();
+const handleClick = (square) => {
+	// const squareClicked = e.target;
+
+	// // if the game is in play and square clicked is empty
+	// if (squareClicked.classList.length === 1) {
+	// 	setMark(squareClicked.id, human);
+	// 	// if no winner and not a tie
+	// 	if (!didWin(board, human) && !isTie()) setMark(bestPlay(), computer);
+	// }
+	if (typeof board[square.target.id] == "number") {
+		setMark(square.target.id, human);
+		if (!didWin(board, human) && !isTie()) setMark(bestPlay(), computer);
+	}
 };
 
-// EVENT LISTENERS
-restartBtn.addEventListener("click", resetBoard);
+// play
+const setMark = (squareId, player) => {
+	board[squareId] = player;
+	document.getElementById(squareId).innerText = player;
+	let gameWon = didWin(board, player);
+	if (gameWon) gameOver(gameWon);
+};
+
+// is the game over?
+const didWin = (board, player) => {
+	let plays = board.reduce(
+		(acc, el, idx) => (el === player ? acc.concat(idx) : acc),
+		[]
+	);
+	let gameWon = null;
+	for (let [index, set] of winCombos.entries()) {
+		if (set.every((elem) => plays.indexOf(elem) > -1)) {
+			gameWon = { index, player };
+			break;
+		}
+	}
+	return gameWon;
+};
+
+const isTie = () => {
+	if (emptySquares().length == 0) {
+		for (let i = 0; i < squares.length; i++) {
+			squares[i].style.backgroundColor = "green";
+			squares[i].removeEventListener("click", handleClick, false);
+		}
+		declareWinner(`It's a draw! 🥸 `);
+		return true;
+	}
+	return false;
+};
+
+// gameOver
+const gameOver = (gameWon) => {
+	for (let index of winCombos[gameWon.index]) {
+		document.getElementById(index).style.backgroundColor =
+			gameWon.player == human ? "green" : "orange";
+	}
+	for (let i = 0; i < squares.length; i++) {
+		squares[i].removeEventListener("click", handleClick, false);
+	}
+	declareWinner(
+		gameWon.player == human ? `You win human! 🥳 ` : `You lose human! ☹️`
+	);
+};
+
+// show winner
+const declareWinner = (who) => {
+	document.querySelector(".results").style.display = "flex";
+	document.querySelector(".results .text").innerText = who;
+};
+
+// computer plays
+const bestPlay = () => {
+	return minimax(board, computer).index;
+};
+
+const emptySquares = () => {
+	return board.filter((square) => typeof square == "number");
+};
+
+const minimax = (virtualBoard, player) => {
+	let choicesArr = emptySquares();
+
+	// check for the win
+	if (didWin(virtualBoard, human)) {
+		return { score: -10 };
+	} else if (didWin(virtualBoard, computer)) {
+		return { score: 10 };
+	} else if (choicesArr.length === 0) {
+		return { score: 0 };
+	}
+
+	// scan the results tree to find all the possible moves
+	let moves = [];
+	for (let i = 0; i < choicesArr.length; i++) {
+		let move = {};
+		move.index = virtualBoard[choicesArr[i]];
+		virtualBoard[choicesArr[i]] = player;
+
+		if (player == computer) {
+			let result = minimax(virtualBoard, human);
+			move.score = result.score;
+		} else {
+			let result = minimax(virtualBoard, computer);
+			move.score = result.score;
+		}
+
+		virtualBoard[choicesArr[i]] = move.index;
+
+		moves.push(move);
+	}
+
+	let bestMove;
+	if (player === computer) {
+		let bestScore = -Infinity;
+		for (let i = 0; i < moves.length; i++) {
+			if (moves[i].score > bestScore) {
+				bestScore = moves[i].score;
+				bestMove = i;
+			}
+		}
+	} else {
+		let bestScore = Infinity;
+		for (var i = 0; i < moves.length; i++) {
+			if (moves[i].score < bestScore) {
+				bestScore = moves[i].score;
+				bestMove = i;
+			}
+		}
+	}
+
+	// return the best move from the possible moves array
+	return moves[bestMove];
+};
+
+//	-------*	 E V E N T  L I S T E N E R S	*-------
+restartBtn.addEventListener("click", startGame);
 
 startGame();
-
-// bugs:
-// won't show the win after hitting resset button
